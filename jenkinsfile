@@ -2,7 +2,7 @@ pipeline {
 
     agent any 
 
-    environmnet {
+    environment {
 
         CI = 'true'
         IAMGE_NAME = "${dockerfile}"
