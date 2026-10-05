@@ -3,8 +3,8 @@ pipeline {
     agent any 
 
     environment {
-        
-        IAMGE_NAME = "${dockerfile}"
+
+        IMAGE_NAME = "${dockerfile}"
     }
 
     stages {
