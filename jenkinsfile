@@ -22,7 +22,7 @@ pipeline {
 
             steps { 
 
-                sh 'docker run --rm dockerfile python -m pytest -v'
+                sh 'docker run --rm dockerfile python -m test_app -v'
             }
         }
 
