@@ -37,6 +37,48 @@ pipeline {
                 }
             }
         }
-    }
 
+        stage('Deploy to dev') {
+           
+            when {
+           
+                branch 'dev'
+           
+            }
+           
+            steps {
+           
+                sh 'docker rm -f flask-dev || true'
+                sh 'docker run -d --name flask-dev -p 5001:5000 ${IMAGE_NAME}'
+                timeout(time: 10, unit: 'MINUTES') {
+                    input message: 'Finished checking the dev site on port 5001? (Click "Proceed" to stop it)'
+                }
+            }
+           
+            post {
+           
+                always {
+           
+                    sh 'docker rm -f flask-dev || true'
+                }
+            }
+        }
+
+        stage('Deploy to prod') {
+            
+            when {
+           
+                branch 'prod'
+           
+            }
+           
+            steps {
+           
+                input message: 'Deploy to production?', ok: 'Deploy'
+                sh 'docker rm -f flask-prod || true'
+                sh 'docker run -d --name flask-prod -p 5002:5000 ${IMAGE_NAME}'
+           
+            }
+        }
+    }
 }
