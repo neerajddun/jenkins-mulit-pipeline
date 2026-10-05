@@ -14,7 +14,7 @@ pipeline {
 
             steps {
 
-                sh 'docker build -t ${IMAGE_NAME} . '
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} . '
                 sh 'docker tag ${IMAGE_NAME}:${IMAGE_TAG} neeraj91/${IMAGE_NAME}:${IMAGE_TAG} '
             }
         }
@@ -23,7 +23,7 @@ pipeline {
 
             steps { 
 
-                sh 'docker run --rm ${IMAGE_NAME} python -m pytest -v'
+                sh 'docker run --rm ${IMAGE_NAME}:${IMAGE_TAG} python -m pytest -v'
             }
         }
 
