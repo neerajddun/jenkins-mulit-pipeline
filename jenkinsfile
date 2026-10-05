@@ -34,7 +34,7 @@ pipeline {
                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DockerPass', usernameVariable: 'DockerName')]) {
 
                 sh 'echo "${DockerPass}" | docker login -u "${DockerName}" --password-stdin'
-                sh 'docker push neeraj91/${IMAGE_NAME}'
+                sh 'docker push neeraj91/${IMAGE_NAME}:${IMAGE_TAG}:${IMAGE_TAG}'
                 }
             }
         }
@@ -50,7 +50,7 @@ pipeline {
             steps {
            
                 sh 'docker rm -f flask-dev || true'
-                sh 'docker run -d --name flask-dev -p 5001:5000 ${IMAGE_NAME}'
+                sh 'docker run -d --name flask-dev -p 5001:5000 ${IMAGE_NAME}:${IMAGE_TAG}'
                 timeout(time: 10, unit: 'MINUTES') {
                     input message: 'Finished checking the dev site on port 5001? (Click "Proceed" to stop it)'
                 }
