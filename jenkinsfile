@@ -2,13 +2,28 @@ pipeline {
 
     agent any 
 
+    environmnet {
+
+        CI = 'true'
+        IAMGE_NAME = "${dockerfile}"
+    }
+
     stages {
 
         stage ('Build') {
 
             steps {
 
-                sh 'docker build -t dockerfile . '
+                sh 'docker build -t ${IMAGE_NAME} . '
+                sh 'docker tag ${IMAGE_NAME} neeraj91/${IMAGE_NAME} '
+            }
+        }
+
+        stage ('Test') {
+
+            steps { 
+
+                sh 'docker run --rm dockerfile python -m pytest -v'
             }
         }
 
@@ -19,6 +34,7 @@ pipeline {
                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DockerPass', usernameVariable: 'DockerName')]) {
 
                 sh 'echo "${DockerPass}" | docker login -u "${DockerName}" --password-stdin'
+                sh 'docker push neeraj91/${IMAGE_NAME}'
                 }
             }
         }
