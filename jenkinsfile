@@ -1,0 +1,27 @@
+pipeline {
+
+    agent any 
+
+    stages {
+
+        stage ('Buid') {
+
+            steps {
+
+                sh 'docker build -t dockerfile . '
+            }
+        }
+
+        stage ('Docker Push') {
+
+            steps {
+
+               withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DockerPass', usernameVariable: 'DockerName')]) {
+
+                sh 'echo -p ${Dockerpass} | docker login -u ${DockerName} --stding-password '
+                }
+            }
+        }
+    }
+
+}
